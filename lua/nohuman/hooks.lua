@@ -1,4 +1,3 @@
-print("iniciando os hooks")
 local hooks, overrides, M = {}, {}, {};
 local allowed_hooks = {
   "install_plugins",

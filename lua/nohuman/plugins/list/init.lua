@@ -1,4 +1,3 @@
-print("Iniciando a lista de plugins")
 local cmd = vim.cmd
 
 cmd("packadd packer.nvim")

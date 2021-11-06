@@ -1,4 +1,4 @@
--- Blind IDE Config
+-- NOHUMAN IDE Config
 require("nohuman")
 
 

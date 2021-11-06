@@ -1,4 +1,3 @@
-print("iniciando as funções")
 local f = function()
   local variavel = 5
   print(variavel)

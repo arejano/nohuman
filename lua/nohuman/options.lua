@@ -1,4 +1,3 @@
-print("iniciando as opções")
 local vim = vim
 local opt = vim.opt
 

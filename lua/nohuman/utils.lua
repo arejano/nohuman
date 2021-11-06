@@ -1,4 +1,3 @@
-print("iniciando o utils")
 local M = {}
 
 M.close_buffer = function(bufexpr, force)
@@ -118,8 +117,8 @@ end
 -- hide statusline
 -- tables fetched from load_config function
 M.hide_statusline = function()
-   local hidden = require("core.utils").load_config().plugins.options.statusline.hidden
-   local shown = require("core.utils").load_config().plugins.options.statusline.shown
+   local hidden = require("nohuman.utils").load_config().plugins.options.statusline.hidden
+   local shown = require("nohuman.utils").load_config().plugins.options.statusline.shown
    local api = vim.api
    local buftype = api.nvim_buf_get_option("%", "ft")
 
@@ -153,7 +152,7 @@ M.load_config = function(reload)
       "['mappings']['terminal']['esc_hide_termmode']",
    }
 
-   local default_config = "core.default_config"
+   local default_config = "nohuman.default_config"
    local config_name = vim.g.nvchad_user_config or "chadrc"
    local config_file = vim.fn.stdpath "config" .. "/lua/custom/" .. config_name .. ".lua"
 
@@ -176,7 +175,7 @@ M.load_config = function(reload)
          -- make sure the returned value is table
          if type(config) == "table" then
             -- data = require(config_name)
-            _G._NVCHAD_CONFIG_CONTENTS = require("core.utils").merge_table(
+            _G._NVCHAD_CONFIG_CONTENTS = require("nohuman.utils").merge_table(
                _G._NVCHAD_CONFIG_CONTENTS,
                config,
                to_replace

@@ -33,7 +33,7 @@ g.dashboard_custom_section = {
     command = "enew",
   },
   f = {
-    description = { "  Edit Configuration         SPC d c" },
+    description = { "  EDIT CONFIGURATION         SPC d c" },
     command = "e ~/.config/nvim/lua/nohuman/config.lua",
   },
 }

@@ -1,5 +1,3 @@
-print("iniciando as configuracoes")
-
 local g = vim.g
 
 -- Ignore for indent levels

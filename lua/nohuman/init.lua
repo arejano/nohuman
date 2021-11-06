@@ -24,7 +24,8 @@ vim.cmd("source ~/.config/nvim/lua/nohuman/tj.vim")
 
 
 -- Colors
--- require("nohuman.colors_config.highlights")
+require("nohuman.colors_config")
+require("nohuman.colors_config.highlights")
 
 -- Langauge server configuration
 require("nohuman.plugins.config.lsp")
