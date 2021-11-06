@@ -1,0 +1,6 @@
+/* .DS_Store */
+/* plugin/ */
+/* startup.log */
+/* lua/kyotorc/* */
+/* lua/personal-globals/* */
+/* # kyotorc and personal-globals are ignored since private configs shouldn't update on force/rebase pull */
