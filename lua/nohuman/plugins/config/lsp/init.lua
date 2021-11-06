@@ -1,4 +1,3 @@
-print("iniciando a configuração do LSp")
 local vim = vim
 local coq = require("coq")
 local lsp = require("lspconfig")

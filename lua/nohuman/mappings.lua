@@ -1,180 +1,138 @@
-local utils = require "nohuman.utils"
-local hooks = require "nohuman.hooks"
-
-local config = utils.load_config()
-local map = utils.map
-
-local maps = config.mappings
-local plugin_maps = maps.plugins
-local nvChad_options = config.options.nvChad
-
+local keymap = vim.api.nvim_set_keymap
+local map = vim.api.nvim_set_keymap
 local cmd = vim.cmd
+local opts = {noremap = true, silent = true}
 
-local M = {}
 
--- these mappings will only be called during initialization
-M.misc = function()
-   local function non_config_mappings()
-      -- Don't copy the replaced text after pasting in visual mode
-      map("v", "p", '"_dP')
+--Execute this file
+map('n', '<leader>tj', ':call tj#save_and_exec()<CR>', opts)
 
-      -- Allow moving the cursor through wrapped lines with j, k, <Up> and <Down>
-      -- http://www.reddit.com/r/vim/comments/2k4cbr/problem_with_gj_and_gk/
-      -- empty mode is same as using :map
-      -- also don't use g[j|k] when in operator pending mode, so it doesn't alter d, y or c behaviour
-      map("", "j", 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', { expr = true })
-      map("", "k", 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', { expr = true })
-      map("", "<Down>", 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', { expr = true })
-      map("", "<Up>", 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', { expr = true })
+-- Saves and exits
+map('n', '<leader>q', '<ESC>:x!<CR>', opts)
+map('n', 'çç', '<ESC>:w!<CR>', opts)
+map('n', '<C-s>q', ':w!<CR>', opts)
+map('i', '<C-s>q', ':w!<CR>', opts)
+map('v', '<C-s>q', ':w!<CR>', opts)
 
-      -- use ESC to turn off search highlighting
-      map("n", "<Esc>", ":noh <CR>")
-   end
+-- Window moviment
+map('n', 'sh', '<C-w>h',opts)
+map('n', 'sj', '<C-w>j',opts)
+map('n', 'sk', '<C-w>k',opts)
+map('n', 'sl', '<C-w>l',opts)
 
-   local function optional_mappings()
-      -- don't yank text on cut ( x )
-      if not nvChad_options.copy_cut then
-         map({ "n", "v" }, "x", '"_x')
-      end
 
-      -- don't yank text on delete ( dd )
-      if not nvChad_options.copy_del then
-         map({ "n", "v" }, "dd", '"_dd')
-      end
+-- Splits
+map('n', '<leader>v', ':vsplit<CR>', opts)
+map('n', '<leader>s', ':split<CR>', opts)
 
-      -- navigation within insert mode
-      if nvChad_options.insert_nav then
-         local inav = maps.insert_nav
+-- TAB
+map('i', 'TAB', '<ESC>', opts)
+map('n', '<TAB>', ':BufferLineCycleNext<CR>', opts)
+map('n', '<S-TAB>', ':BufferLineCyclePrev<CR>', opts)
 
-         map("i", inav.backward, "<Left>")
-         map("i", inav.end_of_line, "<End>")
-         map("i", inav.forward, "<Right>")
-         map("i", inav.next_line, "<Up>")
-         map("i", inav.prev_line, "<Down>")
-         map("i", inav.top_of_line, "<ESC>^i")
-      end
 
-      -- easier navigation between windows
-      if nvChad_options.window_nav then
-         local wnav = maps.window_nav
+-- NVIMTree
+map('n', '<leader>e', ':NvimTreeToggle<CR>', opts)
+-- map('n', '<leader>r', ':RnvimrToggle<CR>', opts)
+-- map('n', '<leader>t', ':terminal<CR>', opts)
+map('n', '<leader>n', ':NvimTreeFocus<CR>', opts)
 
-         map("n", wnav.moveLeft, "<C-w>h")
-         map("n", wnav.moveRight, "<C-w>l")
-         map("n", wnav.moveUp, "<C-w>k")
-         map("n", wnav.moveDown, "<C-w>j")
-      end
 
-      -- check the theme toggler
-      if nvChad_options.theme_toggler then
-         map(
-            "n",
-            maps.theme_toggler,
-            ":lua require('nvchad').toggle_theme(require('core.utils').load_config().ui.theme_toggler) <CR>"
-         )
-      end
-   end
+-- LSP
+map('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
+map('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
+map('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
+map('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
+-- map('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
+map('n', '<leader>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
+map('n', '<leader>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
+map('n', '<leader>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
+map('n', '<leader>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
+map('n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+map('n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+map('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
+map('n', '<leader>de', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
+map('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
+map('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
 
-   local function required_mappings()
-      map("n", maps.close_buffer, ":lua require('core.utils').close_buffer() <CR>") -- close  buffer
-      map("n", maps.copy_whole_file, ":%y+ <CR>") -- copy whole file content
-      map("n", maps.new_buffer, ":enew <CR>") -- new buffer
-      map("n", maps.new_tab, ":tabnew <CR>") -- new tabs
-      map("n", maps.line_number_toggle, ":set nu! <CR>") -- toggle numbers
-      map("n", maps.save_file, ":w <CR>") -- ctrl + s to save file
+-- Harpoon
+map('n', '<leader>a', ':lua require("harpoon.mark").add_file()<CR>', opts)
+map('n', '<C-e>', ':lua require("harpoon.ui").toggle_quick_menu()<CR>', opts)
+map('n', '<C-y>', ':lua require("harpoon.cmd-ui").toggle_quick_menu()<CR>', opts)
+map('n', '<leader>j', ':lua require("harpoon.ui").nav_prev()<CR>', opts)
+map('n', '<leader>k', ':lua require("harpoon.ui").nav_next()<CR>', opts)
+map('n', '<leader>1', ':lua require("harpoon.ui").nav_file(1)<CR>', opts)
+map('n', '<leader>2', ':lua require("harpoon.ui").nav_file(2)<CR>', opts)
+map('n', '<leader>3', ':lua require("harpoon.ui").nav_file(3)<CR>', opts)
+map('n', '<leader>4', ':lua require("harpoon.ui").nav_file(4)<CR>', opts)
 
-      -- terminal mappings --
-      local term_maps = maps.terminal
-      -- get out of terminal mode
-      map("t", term_maps.esc_termmode, "<C-\\><C-n>")
-      -- hide a term from within terminal mode
-      map("t", term_maps.esc_hide_termmode, "<C-\\><C-n> :lua require('core.utils').close_buffer() <CR>")
-      -- pick a hidden term
-      map("n", term_maps.pick_term, ":Telescope terms <CR>")
-      -- Open terminals
-      -- TODO this opens on top of an existing vert/hori term, fixme
-      map("n", term_maps.new_horizontal, ":execute 15 .. 'new +terminal' | let b:term_type = 'hori' | startinsert <CR>")
-      map("n", term_maps.new_vertical, ":execute 'vnew +terminal' | let b:term_type = 'vert' | startinsert <CR>")
-      map("n", term_maps.new_window, ":execute 'terminal' | let b:term_type = 'wind' | startinsert <CR>")
-      -- terminal mappings end --
+-- edgemotion
+map('n','<C-j>', '<Plug>(edgemotion-j)',{silent=true})
+map('n','<C-k>', '<Plug>(edgemotion-k)',{silent=true})
+map('v','<C-j>', '<Plug>(edgemotion-j)',{silent=true})
+map('v','<C-k>', '<Plug>(edgemotion-k)',{silent=true})
 
-      -- Add Packer commands because we are not loading it at startup
-      cmd "silent! command PackerClean lua require 'plugins' require('packer').clean()"
-      cmd "silent! command PackerCompile lua require 'plugins' require('packer').compile()"
-      cmd "silent! command PackerInstall lua require 'plugins' require('packer').install()"
-      cmd "silent! command PackerStatus lua require 'plugins' require('packer').status()"
-      cmd "silent! command PackerSync lua require 'plugins' require('packer').sync()"
-      cmd "silent! command PackerUpdate lua require 'plugins' require('packer').update()"
 
-      -- add NvChadUpdate command and mapping
-      cmd "silent! command! NvChadUpdate lua require('nvchad').update_nvchad()"
-      map("n", maps.update_nvchad, ":NvChadUpdate <CR>")
+-- RESIZES
+-- resize up and down
+keymap('n', ';k',   ':resize +3 <CR>',          { noremap=true, silent=true })
+keymap('n', ';j',   ':resize -3 <CR>',          { noremap=true, silent=true })
+-- resize right and left
+keymap('n', ';l',   ':vertical resize +3 <CR>', { noremap=true, silent=true })
+keymap('n', ';h',   ':vertical resize -3 <CR>', { noremap=true, silent=true })
 
-      -- add ChadReload command and maping
-      -- cmd "silent! command! NvChadReload lua require('nvchad').reload_config()"
-   end
+-- move selected line(s) up or down
+keymap('v', 'K', ":m '<-2<CR>gv=gv", {noremap=true, silent=true})
+keymap('v', 'J', ":m '>+1<CR>gv=gv", {noremap=true, silent=true})
 
-   non_config_mappings()
-   optional_mappings()
-   required_mappings()
-   hooks.run("setup_mappings", map)
-end
 
--- below are all plugin related mappings
+map('n', '<leader>oc', ':e ~/.config/nvim/lua/settings.lua<CR>', opts)
+map('n', '<leader>nf', ':DashboardNewFile<CR>', opts)
+map('n', '<leader>ss', ':SessionSave<CR>', opts)
+map('n', '<leader>sl', ':SessionLoad<CR>', opts)
+map('n', '<leader>v', ':vsplit <CR>', {silent = true})
+map('n', '<leader>d', ':Lspsaga show_cursor_diagnostics<CR>', opts)
 
-M.bufferline = function()
-   local m = plugin_maps.bufferline
 
-   map("n", m.next_buffer, ":BufferLineCycleNext <CR>")
-   map("n", m.prev_buffer, ":BufferLineCyclePrev <CR>")
-end
+-- TELESCOPE
 
-M.comment = function()
-   local m = plugin_maps.comment.toggle
-   map("n", m, ":CommentToggle <CR>")
-   map("v", m, ":CommentToggle <CR>")
-end
+--      --> Launch Telescope without any argument
+keymap('n', "\\\\", "<cmd>lua require('telescope.builtin').builtin() <CR>", {silent=true, noremap=true})
 
-M.dashboard = function()
-   local m = plugin_maps.dashboard
+--       --> show all availabe MAPPING
+keymap('n', "<leader>M", "<cmd>lua require('telescope.builtin').keymaps() <CR>", {silent=true, noremap=true})
 
-   map("n", m.bookmarks, ":DashboardJumpMarks <CR>")
-   map("n", m.new_file, ":DashboardNewFile <CR>")
-   map("n", m.open, ":Dashboard <CR>")
-   map("n", m.session_load, ":SessionLoad <CR>")
-   map("n", m.session_save, ":SessionSave <CR>")
-end
+--       --> show buffers/opened files
+keymap('n', "<C-b>", "<cmd>lua require('telescope.builtin').buffers() <CR>", {silent=true, noremap=true})
 
-M.nvimtree = function()
-   map("n", plugin_maps.nvimtree.toggle, ":NvimTreeToggle <CR>")
-   map("n", plugin_maps.nvimtree.focus, ":NvimTreeFocus <CR>")
-end
 
-M.telescope = function()
-   local m = plugin_maps.telescope
+--       --> Find Files
+-- NOTE1: to get project root's directory, extra plugin (github.com/ygm2/rooter.nvim) is used.
+-- any config related to project root is in seperate config file (lua/plugin_confs/rooter_nvim.lua)
+-- to change settings related to working directory, refer to rooter_nvim.lua config file
 
-   map("n", m.buffers, ":Telescope buffers <CR>")
-   map("n", m.find_files, ":Telescope find_files <CR>")
-   map("n", m.find_hiddenfiles, ":Telescope find_files hidden=true <CR>")
-   map("n", m.git_commits, ":Telescope git_commits <CR>")
-   map("n", m.git_status, ":Telescope git_status <CR>")
-   map("n", m.help_tags, ":Telescope help_tags <CR>")
-   map("n", m.live_grep, ":Telescope live_grep <CR>")
-   map("n", m.oldfiles, ":Telescope oldfiles <CR>")
-   map("n", m.themes, ":Telescope themes <CR>")
-end
+-- Find files from current file's project
+keymap('n', "<C-p>", ":Telescope find_files <cr>", {silent=true, noremap=true})
+-- show all files from current working directory
+keymap('n', "<C-f>", "<cmd>lua require('telescope.builtin').find_files( { cwd = vim.fn.expand('%:p:h') }) <CR>", {silent=true, noremap=true})
 
-M.telescope_media = function()
-   local m = plugin_maps.telescope.telescope_media
 
-   map("n", m.media_files, ":Telescope media_files <CR>")
-end
 
-M.truezen = function()
-   local m = plugin_maps.truezen
+--       --> Code Action
+-- for example, in flutter/dart you can wrap or delete widgets using code action.
+-- for more see :help builtin.lsp_code_actions() or :help builtin.lsp_range_code_actions()
+keymap('n', "<leader>ca", "<cmd>lua  require('telescope.builtin').lsp_code_actions( {layout_config={width=50, height=20} } ) <CR>", {silent=true, noremap=true})
+keymap('x', "<leader>ca", "<cmd>lua  require('telescope.builtin').lsp_range_code_actions( {layout_config={width=50, height=25} } ) <CR>", {silent=true, noremap=true})
+keymap('n', '<leader>of', ':Telescope oldfiles<CR>', opts)
+keymap('n', 'C-f', ':Telescope fd<CR>', opts)
+keymap('n', '<leader>bb', ':Telescope buffers<CR>', opts)
+keymap('n', '<leader>sf', ':Telescope live_grep<CR>', opts)
+keymap('n', '<leader>ff', ':Telescope fd<CR>', opts)
+keymap('n', '<leader>cc', ':Telescope colorscheme<CR>', opts)
 
-   map("n", m.ataraxis_mode, ":TZAtaraxis <CR>")
-   map("n", m.focus_mode, ":TZFocus <CR>")
-   map("n", m.minimalistic_mode, ":TZMinimalist <CR>")
-end
+-- GitSigns
+map('n', '<leader>gs', ':Gitsigns toggle_current_line_blame<CR>', opts)
 
-return M
+-- Commentary
+map('n', '<leader>/', ':Commentary<CR>', opts)
+
