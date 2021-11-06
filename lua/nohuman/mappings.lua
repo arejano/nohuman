@@ -135,4 +135,10 @@ map('n', '<leader>gs', ':Gitsigns toggle_current_line_blame<CR>', opts)
 
 -- Commentary
 map('n', '<leader>/', ':Commentary<CR>', opts)
+map('v', '<leader>/', ':Commentary<CR>', opts)
+
+
+-- TroubleToggle
+map('n', '<leader>h', ':TroubleToggle<CR>', opts)
+map('v', '<leader>h', ':TroubleToggle<CR>', opts)
 

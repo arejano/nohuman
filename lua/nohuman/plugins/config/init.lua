@@ -22,9 +22,10 @@ require("nohuman.plugins.config.coq3p")
 require("nohuman.plugins.config.nvimtree")
 -- Nightfox theme config
 require("nohuman.plugins.config.nightfox")
---Shade https://github.com/sunjon/Shade.nvim
--- require("nohuman.plugins.config.shade")
 --Harpon
 require("nohuman.plugins.config.harpoon")
 --LSP
 require("nohuman.plugins.config.lsp")
+--Shade https://github.com/sunjon/Shade.nvim
+-- require("nohuman.plugins.config.shade")
+
