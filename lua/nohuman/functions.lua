@@ -1,7 +1,6 @@
 local f = function()
   local variavel = 5
   print(variavel)
-
 end
 
 function GlobalFunction()
@@ -19,5 +18,18 @@ function GlobalFunction()
 
     print ("...done with rename " .. renamed)
   end)
+end
+
+P = function(v)
+  return v
+end
+
+RELOAD  = function(...)
+  return require("pllenary.reload").reload_module(...)
+end
+
+R = function(name)
+  RELOAD(name)
+  return require(name)
 end
 

@@ -142,7 +142,7 @@ require("packer").startup(function(use)
   -- Harpoon
   use('ThePrimeagen/harpoon')
 
-  for _, plugin in ipairs(vim.g.kyoto_extra_plugins) do
+  for _, plugin in ipairs(vim.g.nohuman_extra_plugins) do
     use(plugin)
   end
 end)

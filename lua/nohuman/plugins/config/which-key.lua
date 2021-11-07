@@ -84,8 +84,8 @@ require("which-key").register({
   },
   h = "Errors Dashboard",
   k = {
-    name = "+Kyoto.nvim",
-    c = "Edit kyotorc",
+    name = "+NOHUMAN.nvim",
+    c = "Edit NOHUMAN",
   },
   lg = "LazyGit",
   n = "Explorer",

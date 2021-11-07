@@ -8,7 +8,7 @@ local opts = {noremap = true, silent = true}
 map('n', '<leader>tj', ':call tj#save_and_exec()<CR>', opts)
 
 -- Saves and exits
-map('n', '<leader>q', '<ESC>:x!<CR>', opts)
+map('n', '<leader>q', '<ESC>:q!<CR>', opts)
 map('n', 'çç', '<ESC>:w!<CR>', opts)
 map('n', '<C-s>q', ':w!<CR>', opts)
 map('i', '<C-s>q', ':w!<CR>', opts)
@@ -24,6 +24,8 @@ map('n', 'sl', '<C-w>l',opts)
 -- Splits
 map('n', '<leader>v', ':vsplit<CR>', opts)
 map('n', '<leader>s', ':split<CR>', opts)
+map('n', 'ss', ':vsplit<CR>', opts)
+map('n', 'sv', ':split<CR>', opts)
 
 -- TAB
 map('i', 'TAB', '<ESC>', opts)
@@ -123,12 +125,12 @@ keymap('n', "<C-f>", "<cmd>lua require('telescope.builtin').find_files( { cwd = 
 -- for more see :help builtin.lsp_code_actions() or :help builtin.lsp_range_code_actions()
 keymap('n', "<leader>ca", "<cmd>lua  require('telescope.builtin').lsp_code_actions( {layout_config={width=50, height=20} } ) <CR>", {silent=true, noremap=true})
 keymap('x', "<leader>ca", "<cmd>lua  require('telescope.builtin').lsp_range_code_actions( {layout_config={width=50, height=25} } ) <CR>", {silent=true, noremap=true})
-keymap('n', '<leader>of', ':Telescope oldfiles<CR>', opts)
 keymap('n', 'C-f', ':Telescope fd<CR>', opts)
-keymap('n', '<leader>bb', ':Telescope buffers<CR>', opts)
+keymap('n', '<leader>fo', ':Telescope oldfiles<CR>', opts)
+keymap('n', '<leader>fb', ':Telescope buffers<CR>', opts)
 keymap('n', '<leader>sf', ':Telescope live_grep<CR>', opts)
 keymap('n', '<leader>ff', ':Telescope fd<CR>', opts)
-keymap('n', '<leader>cc', ':Telescope colorscheme<CR>', opts)
+keymap('n', '<leader>fc', ':Telescope colorscheme<CR>', opts)
 
 -- GitSigns
 map('n', '<leader>gs', ':Gitsigns toggle_current_line_blame<CR>', opts)

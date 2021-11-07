@@ -1,8 +1,8 @@
 local cmd = vim.cmd
 local g = vim.g
-local ui = g.kyotorc_ui
+local ui = g.nohuman_ui
 
-local colors = require("colors").get()
+local colors = require("nohuman.colors_config").get()
 
 local black = colors.black
 local black2 = colors.black2
@@ -150,3 +150,5 @@ fg("TelescopeBorder", line)
 fg("TelescopePreviewBorder", grey)
 fg("TelescopePromptBorder", line)
 fg("TelescopeResultsBorder", line)
+
+

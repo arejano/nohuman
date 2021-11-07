@@ -1,4 +1,4 @@
-local colors = require("colors").get()
+local colors = require("nohuman.colors_config").get()
 local lsp = require("feline.providers.lsp")
 
 local icon_styles = {
@@ -18,8 +18,8 @@ local icon_styles = {
   },
 
   block = {
-    left = " ",
-    right = " ",
+    left = "  ",
+    right = "  ",
     main_icon = "   ",
     vi_mode_icon = "  ",
     position_icon = "  ",
@@ -42,9 +42,34 @@ local icon_styles = {
   },
 }
 
-local user_statusline_style = vim.g.kyotorc_ui.statusline_style
--- local statusline_style = icon_styles[user_statusline_style]
-local statusline_style = icon_styles.block
+
+local mode_colors = {
+  ["n"] = { "NORMAL", colors.red },
+  ["no"] = { "N-PENDING", colors.red },
+  ["i"] = { "INSERT", colors.dark_purple },
+  ["ic"] = { "INSERT", colors.dark_purple },
+  ["t"] = { "TERMINAL", colors.green },
+  ["v"] = { "VISUAL", colors.cyan },
+  ["V"] = { "V-LINE", colors.cyan },
+  [""] = { "V-BLOCK", colors.cyan },
+  ["R"] = { "REPLACE", colors.orange },
+  ["Rv"] = { "V-REPLACE", colors.orange },
+  ["s"] = { "SELECT", colors.nord_blue },
+  ["S"] = { "S-LINE", colors.nord_blue },
+  [""] = { "S-BLOCK", colors.nord_blue },
+  ["c"] = { "COMMAND", colors.pink },
+  ["cv"] = { "COMMAND", colors.pink },
+  ["ce"] = { "COMMAND", colors.pink },
+  ["r"] = { "PROMPT", colors.teal },
+  ["rm"] = { "MORE", colors.teal },
+  ["r?"] = { "CONFIRM", colors.teal },
+  ["!"] = { "SHELL", colors.green },
+}
+
+
+local user_statusline_style = vim.g.nohuman_ui.statusline_style
+local statusline_style = icon_styles[user_statusline_style]
+-- local statusline_style = icon_styles.block
 
 -- Initialize the components table
 local components = {
@@ -60,63 +85,78 @@ table.insert(components.inactive, {})
 table.insert(components.inactive, {})
 table.insert(components.inactive, {})
 
+
+
+-- components.active[1][1] = {
+--   provider = function()
+--     local dir_name = vim.fn.fnamemodify(vim.fn.getcwd(), ":t")
+--     return "  " .. dir_name .. "   "
+--   end,
+
+--   hl = {
+--     fg = colors.statusline_bg,
+--     bg = colors.white,
+--   },
+-- }
+
+
+-- components.active[1][2] = {
+--   provider = statusline_style.main_icon,
+
+--   hl = {
+--     fg = "#FFFFFF", --colors.statusline_bg,
+--     bg = colors.statusline_bg,
+--   },
+--   -- right_sep = {
+--   --   str = statusline_style.right,
+--   --   hl = {
+--   --     fg = colors.nord_blue,
+--   --     bg = colors.statusline_bg,
+--   --   },
+--   -- },
+-- }
 components.active[1][1] = {
-  provider = statusline_style.main_icon,
-
+  provider =  "git_branch",
   hl = {
-    fg = colors.statusline_bg,
-    bg = colors.nord_blue,
+    fg = colors.white,
+    bg = colors.statusline_bg,
   },
-
-  right_sep = {
-    str = statusline_style.right,
-    hl = {
-      fg = colors.nord_blue,
-      bg = colors.lightbg,
-    },
-  },
+  icon = "  ",
 }
 
 components.active[1][2] = {
+  provider = " " .. statusline_style.left,
+  hl = {
+    fg = colors.one_bg2,
+    bg = colors.statusline_bg,
+  },
+}
+
+components.active[1][3] = {
   provider = function()
     local filename = vim.fn.expand("%:t")
     local extension = vim.fn.expand("%:e")
     local icon = require("nvim-web-devicons").get_icon(filename, extension)
     if icon == nil then
-      icon = " "
+      icon = ""
       return icon
     end
     return " " .. icon .. " " .. filename .. " "
   end,
   hl = {
     fg = colors.white,
-    bg = colors.lightbg,
+    bg = colors.statusline_bg,
   },
 
   right_sep = {
     str = statusline_style.right,
-    hl = { fg = colors.lightbg, bg = colors.lightbg2 },
-  },
-}
-
-components.active[1][3] = {
-  provider = function()
-    local dir_name = vim.fn.fnamemodify(vim.fn.getcwd(), ":t")
-    return "  " .. dir_name .. " "
-  end,
-
-  hl = {
-    fg = colors.grey_fg2,
-    bg = colors.lightbg2,
-  },
-  right_sep = {
-    str = statusline_style.right,
-    hi = {
-      fg = colors.lightbg2,
-      bg = colors.statusline_bg,
+    hl = {
+      fg = colors.white,
+      bg = colors.statusline_bg
     },
   },
 }
+
 
 components.active[1][4] = {
   provider = "git_diff_added",
@@ -229,132 +269,91 @@ components.active[2][1] = {
 components.active[3][1] = {
   provider = function()
     if next(vim.lsp.buf_get_clients()) ~= nil then
-      return "  LSP"
+      -- return "  LSP"
+      return statusline_style.main_icon
     else
-      return ""
+      return "" .. statusline_style.main_icon .. "NO LSP  "
     end
   end,
-  hl = { fg = colors.grey_fg2, bg = colors.statusline_bg },
-}
 
-components.active[3][2] = {
-  provider = "git_branch",
-  hl = {
-    fg = colors.grey_fg2,
-    bg = colors.statusline_bg,
-  },
-  icon = "  ",
-}
+  hl = function()
+    if next(vim.lsp.buf_get_clients()) ~= nil then
+      return { fg = colors.white , bg = colors.statusline_bg }
+    end
 
-components.active[3][3] = {
-  provider = " " .. statusline_style.left,
-  hl = {
-    fg = colors.one_bg2,
-    bg = colors.statusline_bg,
-  },
-}
-
-local mode_colors = {
-  ["n"] = { "NORMAL", colors.red },
-  ["no"] = { "N-PENDING", colors.red },
-  ["i"] = { "INSERT", colors.dark_purple },
-  ["ic"] = { "INSERT", colors.dark_purple },
-  ["t"] = { "TERMINAL", colors.green },
-  ["v"] = { "VISUAL", colors.cyan },
-  ["V"] = { "V-LINE", colors.cyan },
-  [""] = { "V-BLOCK", colors.cyan },
-  ["R"] = { "REPLACE", colors.orange },
-  ["Rv"] = { "V-REPLACE", colors.orange },
-  ["s"] = { "SELECT", colors.nord_blue },
-  ["S"] = { "S-LINE", colors.nord_blue },
-  [""] = { "S-BLOCK", colors.nord_blue },
-  ["c"] = { "COMMAND", colors.pink },
-  ["cv"] = { "COMMAND", colors.pink },
-  ["ce"] = { "COMMAND", colors.pink },
-  ["r"] = { "PROMPT", colors.teal },
-  ["rm"] = { "MORE", colors.teal },
-  ["r?"] = { "CONFIRM", colors.teal },
-  ["!"] = { "SHELL", colors.green },
+    if next(vim.lsp.buf_get_clients()) == nil then
+      return { fg = colors.red, bg = colors.statusline_bg }
+    end
+  end
 }
 
 local chad_mode_hl = function()
   return {
     fg = mode_colors[vim.fn.mode()][2],
-    bg = colors.one_bg,
+    bg = colors.statusline_bg,
   }
 end
 
-components.active[3][4] = {
-  provider = statusline_style.left,
-  hl = function()
-    return {
-      fg = mode_colors[vim.fn.mode()][2],
-      bg = colors.one_bg2,
-    }
-  end,
-}
-
-components.active[3][5] = {
-  provider = statusline_style.vi_mode_icon,
-  hl = function()
-    return {
-      fg = colors.statusline_bg,
-      bg = mode_colors[vim.fn.mode()][2],
-    }
-  end,
-}
-
-components.active[3][6] = {
+components.active[3][2] = {
   provider = function()
     return " " .. mode_colors[vim.fn.mode()][1] .. " "
   end,
   hl = chad_mode_hl,
 }
 
-components.active[3][7] = {
-  provider = statusline_style.left,
-  hl = {
-    fg = colors.grey,
-    bg = colors.one_bg,
-  },
-}
+-- components.active[3][7] = {
+--   provider = statusline_style.left,
+--   hl = {
+--     fg = colors.grey,
+--     bg = colors.statusline_bg,
+--   },
+-- }
 
-components.active[3][8] = {
-  provider = statusline_style.left,
-  hl = {
-    fg = colors.green,
-    bg = colors.grey,
-  },
-}
+-- components.active[3][8] = {
+--   provider = statusline_style.left,
+--   hl = {
+--     fg = colors.green,
+--     bg = colors.statusline_bg,
+--   },
+-- }
 
-components.active[3][9] = {
-  provider = statusline_style.position_icon,
-  hl = {
-    fg = colors.black,
-    bg = colors.green,
-  },
-}
-
-components.active[3][10] = {
+-- components.active[3][9] = {
+--   provider = statusline_style.position_icon,
+--   hl = {
+--     fg = colors.statusline_bg,
+--     bg = colors.white,
+--   },
+-- }
+--
+--
+components.active[3][3] = {
   provider = function()
     local current_line = vim.fn.line(".")
     local total_line = vim.fn.line("$")
 
     if current_line == 1 then
-      return " Top "
+      return " TOP "
     elseif current_line == vim.fn.line("$") then
-      return " Bot "
+      return " BOT "
     end
     local result, _ = math.modf((current_line / total_line) * 100)
     return " " .. result .. "%% "
   end,
 
   hl = {
-    fg = colors.green,
-    bg = colors.one_bg,
+    fg = colors.white,
+    bg = colors.statusline_bg,
   },
 }
+
+
+
+
+
+-- components.active[1][1] = edit_mode_icon
+
 components.inactive = components.active
+
 
 require("feline").setup({
   colors = {

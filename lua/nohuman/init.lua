@@ -29,3 +29,5 @@ require("nohuman.plugins.config.lsp")
 vim.cmd("source ~/.config/nvim/lua/nohuman/autocmd.vim")
 
 
+vim.cmd[[au VimEnter * highlight MsgArea guibg=#0B0F14]]
+vim.cmd[[au VimEnter * highlight VertSplit guibg=#0B0F14 guifg=#0B0F14]]

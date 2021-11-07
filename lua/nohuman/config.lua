@@ -14,7 +14,7 @@ g.indent_blankline_buftype_exclude = { "terminal", "nofile" }
 g.mapleader = " "
 
 -- extra plugins to install (must only be strings)
-g.kyoto_extra_plugins = {}
+g.nohuman_extra_plugins = {}
 
 -- Configs for LSPs
 g.lsp_config = {
@@ -38,11 +38,11 @@ g.coq_settings = {
 }
 
 -- UI CONFIGS
-g.kyotorc_ui = {
+g.nohuman_ui= {
   -- find a list of themes at https://github.com/NvChad/nvim-base16.lua/tree/master/lua/themes
-  theme = "uwu",
+  theme = "nohuman",
   -- Find a list of options at lua/statusline.lua(icon_styles var)
-  statusline_style = "arrow",
+  statusline_style = "block",
   -- transparent = true,
 }
 

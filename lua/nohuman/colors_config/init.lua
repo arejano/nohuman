@@ -2,7 +2,7 @@ local M = {}
 local g = vim.g
 
 -- set the global theme, used at various places like theme switcher, highlights
-local theme = g.kyotorc_ui.theme
+local theme = g.nohuman_ui.theme
 
 local base16 = require("base16")
 -- first load the base16 theme
