@@ -85,6 +85,233 @@ table.insert(components.inactive, {})
 table.insert(components.inactive, {})
 table.insert(components.inactive, {})
 
+function InitializeComponentes()
+  -- print(vim.inspect(vim.api.nvim_buf_get_lines(0, 0, -1, false)))
+
+  components.active[1][1] = {
+    provider =  "git_branch",
+    hl = {
+      fg = colors.white,
+      bg = colors.statusline_bg,
+    },
+    icon = "  ",
+  }
+  
+  components.active[1][2] = {
+    provider = " " .. statusline_style.left,
+    hl = {
+      fg = colors.one_bg2,
+      bg = colors.statusline_bg,
+    },
+  }
+  
+  components.active[1][3] = {
+    provider = function()
+      local filename = vim.fn.expand("%:t")
+      local extension = vim.fn.expand("%:e")
+      local icon = require("nvim-web-devicons").get_icon(filename, extension)
+      if icon == nil then
+        icon = ""
+        return icon
+      end
+      return " " .. icon .. " " .. filename .. " "
+    end,
+    hl = {
+      fg = colors.white,
+      bg = colors.statusline_bg,
+    },
+  
+    right_sep = {
+      str = statusline_style.right,
+      hl = {
+        fg = colors.white,
+        bg = colors.statusline_bg
+      },
+    },
+  }
+  
+  
+  components.active[1][4] = {
+    provider = "git_diff_added",
+    hl = {
+      fg = colors.grey_fg2,
+      bg = colors.statusline_bg,
+    },
+    icon = " ",
+  }
+  -- diffModfified
+  components.active[1][5] = {
+    provider = "git_diff_changed",
+    hl = {
+      fg = colors.grey_fg2,
+      bg = colors.statusline_bg,
+    },
+    icon = "   ",
+  }
+  -- diffRemove
+  components.active[1][6] = {
+    provider = "git_diff_removed",
+    hl = {
+      fg = colors.grey_fg2,
+      bg = colors.statusline_bg,
+    },
+    icon = "  ",
+  }
+  
+  components.active[1][7] = {
+    provider = "diagnostic_errors",
+    enabled = function()
+      return lsp.diagnostics_exist("Error")
+    end,
+    hl = { fg = colors.red },
+    icon = "  ",
+  }
+  
+  components.active[1][8] = {
+    provider = "diagnostic_warnings",
+    enabled = function()
+      return lsp.diagnostics_exist("Warning")
+    end,
+    hl = { fg = colors.yellow },
+    icon = "  ",
+  }
+  
+  components.active[1][9] = {
+    provider = "diagnostic_hints",
+    enabled = function()
+      return lsp.diagnostics_exist("Hint")
+    end,
+    hl = { fg = colors.grey_fg2 },
+    icon = "  ",
+  }
+  
+  components.active[1][10] = {
+    provider = "diagnostic_info",
+    enabled = function()
+      return lsp.diagnostics_exist("Information")
+    end,
+    hl = { fg = colors.green },
+    icon = "  ",
+  }
+  
+  components.active[2][1] = {
+    provider = function()
+      local Lsp = vim.lsp.util.get_progress_messages()[1]
+      if Lsp then
+        local msg = Lsp.message or ""
+        local percentage = Lsp.percentage or 0
+        local title = Lsp.title or ""
+        local spinners = {
+          "",
+          "",
+          "",
+        }
+  
+        local success_icon = {
+          "",
+          "",
+          "",
+        }
+  
+        local ms = vim.loop.hrtime() / 1000000
+        local frame = math.floor(ms / 120) % #spinners
+  
+        if percentage >= 70 then
+          return string.format(
+            " %%<%s %s %s (%s%%%%) ",
+            success_icon[frame + 1],
+            title,
+            msg,
+            percentage
+          )
+        else
+          return string.format(
+            " %%<%s %s %s (%s%%%%) ",
+            spinners[frame + 1],
+            title,
+            msg,
+            percentage
+          )
+        end
+      end
+      return ""
+    end,
+    hl = { fg = colors.green },
+  }
+  
+  components.active[3][1] = {
+    provider = function()
+      if next(vim.lsp.buf_get_clients()) ~= nil then
+        -- return "  LSP"
+        return statusline_style.main_icon
+      else
+        return "" .. statusline_style.main_icon .. "NO LSP  "
+      end
+    end,
+  
+    hl = function()
+      if next(vim.lsp.buf_get_clients()) ~= nil then
+        return { fg = colors.white , bg = colors.statusline_bg }
+      end
+  
+      if next(vim.lsp.buf_get_clients()) == nil then
+        return { fg = colors.red, bg = colors.statusline_bg }
+      end
+    end
+  }
+  
+  local chad_mode_hl = function()
+    return {
+      fg = mode_colors[vim.fn.mode()][2],
+      bg = colors.statusline_bg,
+    }
+  end
+  
+  components.active[3][2] = {
+    provider = function()
+      return " " .. mode_colors[vim.fn.mode()][1] .. " "
+    end,
+    hl = chad_mode_hl,
+  }
+  
+  
+  components.active[3][3] = {
+    provider = function()
+      local current_line = vim.fn.line(".")
+      local total_line = vim.fn.line("$")
+  
+      if current_line == 1 then
+        return " TOP "
+      elseif current_line == vim.fn.line("$") then
+        return " BOT "
+      end
+      local result, _ = math.modf((current_line / total_line) * 100)
+      return " " .. result .. "%% "
+    end,
+  
+    hl = {
+      fg = colors.white,
+      bg = colors.statusline_bg,
+    },
+  }
+  
+  
+  
+  components.inactive = components.active
+  
+  
+  require("feline").setup({
+    colors = {
+      bg = colors.statusline_bg,
+      fg = colors.fg,
+    },
+    components = components,
+  })
+end
+
+InitializeComponentes()
+
+
 
 
 -- components.active[1][1] = {
@@ -115,192 +342,6 @@ table.insert(components.inactive, {})
 --   --   },
 --   -- },
 -- }
-components.active[1][1] = {
-  provider =  "git_branch",
-  hl = {
-    fg = colors.white,
-    bg = colors.statusline_bg,
-  },
-  icon = "  ",
-}
-
-components.active[1][2] = {
-  provider = " " .. statusline_style.left,
-  hl = {
-    fg = colors.one_bg2,
-    bg = colors.statusline_bg,
-  },
-}
-
-components.active[1][3] = {
-  provider = function()
-    local filename = vim.fn.expand("%:t")
-    local extension = vim.fn.expand("%:e")
-    local icon = require("nvim-web-devicons").get_icon(filename, extension)
-    if icon == nil then
-      icon = ""
-      return icon
-    end
-    return " " .. icon .. " " .. filename .. " "
-  end,
-  hl = {
-    fg = colors.white,
-    bg = colors.statusline_bg,
-  },
-
-  right_sep = {
-    str = statusline_style.right,
-    hl = {
-      fg = colors.white,
-      bg = colors.statusline_bg
-    },
-  },
-}
-
-
-components.active[1][4] = {
-  provider = "git_diff_added",
-  hl = {
-    fg = colors.grey_fg2,
-    bg = colors.statusline_bg,
-  },
-  icon = " ",
-}
--- diffModfified
-components.active[1][5] = {
-  provider = "git_diff_changed",
-  hl = {
-    fg = colors.grey_fg2,
-    bg = colors.statusline_bg,
-  },
-  icon = "   ",
-}
--- diffRemove
-components.active[1][6] = {
-  provider = "git_diff_removed",
-  hl = {
-    fg = colors.grey_fg2,
-    bg = colors.statusline_bg,
-  },
-  icon = "  ",
-}
-
-components.active[1][7] = {
-  provider = "diagnostic_errors",
-  enabled = function()
-    return lsp.diagnostics_exist("Error")
-  end,
-  hl = { fg = colors.red },
-  icon = "  ",
-}
-
-components.active[1][8] = {
-  provider = "diagnostic_warnings",
-  enabled = function()
-    return lsp.diagnostics_exist("Warning")
-  end,
-  hl = { fg = colors.yellow },
-  icon = "  ",
-}
-
-components.active[1][9] = {
-  provider = "diagnostic_hints",
-  enabled = function()
-    return lsp.diagnostics_exist("Hint")
-  end,
-  hl = { fg = colors.grey_fg2 },
-  icon = "  ",
-}
-
-components.active[1][10] = {
-  provider = "diagnostic_info",
-  enabled = function()
-    return lsp.diagnostics_exist("Information")
-  end,
-  hl = { fg = colors.green },
-  icon = "  ",
-}
-
-components.active[2][1] = {
-  provider = function()
-    local Lsp = vim.lsp.util.get_progress_messages()[1]
-    if Lsp then
-      local msg = Lsp.message or ""
-      local percentage = Lsp.percentage or 0
-      local title = Lsp.title or ""
-      local spinners = {
-        "",
-        "",
-        "",
-      }
-
-      local success_icon = {
-        "",
-        "",
-        "",
-      }
-
-      local ms = vim.loop.hrtime() / 1000000
-      local frame = math.floor(ms / 120) % #spinners
-
-      if percentage >= 70 then
-        return string.format(
-          " %%<%s %s %s (%s%%%%) ",
-          success_icon[frame + 1],
-          title,
-          msg,
-          percentage
-        )
-      else
-        return string.format(
-          " %%<%s %s %s (%s%%%%) ",
-          spinners[frame + 1],
-          title,
-          msg,
-          percentage
-        )
-      end
-    end
-    return ""
-  end,
-  hl = { fg = colors.green },
-}
-
-components.active[3][1] = {
-  provider = function()
-    if next(vim.lsp.buf_get_clients()) ~= nil then
-      -- return "  LSP"
-      return statusline_style.main_icon
-    else
-      return "" .. statusline_style.main_icon .. "NO LSP  "
-    end
-  end,
-
-  hl = function()
-    if next(vim.lsp.buf_get_clients()) ~= nil then
-      return { fg = colors.white , bg = colors.statusline_bg }
-    end
-
-    if next(vim.lsp.buf_get_clients()) == nil then
-      return { fg = colors.red, bg = colors.statusline_bg }
-    end
-  end
-}
-
-local chad_mode_hl = function()
-  return {
-    fg = mode_colors[vim.fn.mode()][2],
-    bg = colors.statusline_bg,
-  }
-end
-
-components.active[3][2] = {
-  provider = function()
-    return " " .. mode_colors[vim.fn.mode()][1] .. " "
-  end,
-  hl = chad_mode_hl,
-}
-
 -- components.active[3][7] = {
 --   provider = statusline_style.left,
 --   hl = {
@@ -326,39 +367,3 @@ components.active[3][2] = {
 -- }
 --
 --
-components.active[3][3] = {
-  provider = function()
-    local current_line = vim.fn.line(".")
-    local total_line = vim.fn.line("$")
-
-    if current_line == 1 then
-      return " TOP "
-    elseif current_line == vim.fn.line("$") then
-      return " BOT "
-    end
-    local result, _ = math.modf((current_line / total_line) * 100)
-    return " " .. result .. "%% "
-  end,
-
-  hl = {
-    fg = colors.white,
-    bg = colors.statusline_bg,
-  },
-}
-
-
-
-
-
--- components.active[1][1] = edit_mode_icon
-
-components.inactive = components.active
-
-
-require("feline").setup({
-  colors = {
-    bg = colors.statusline_bg,
-    fg = colors.fg,
-  },
-  components = components,
-})

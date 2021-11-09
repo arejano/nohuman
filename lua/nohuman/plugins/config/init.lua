@@ -1,6 +1,7 @@
 -- Start screen
 require("nohuman.plugins.config.dashboard")
 -- lualine configuration
+-- require("nohuman.plugins.config.lualine")
 require("nohuman.plugins.config.statusline")
 -- nvim-bufferline.lua configuration
 require("nohuman.plugins.config.bufferline")
@@ -28,4 +29,3 @@ require("nohuman.plugins.config.harpoon")
 require("nohuman.plugins.config.lsp")
 --Shade https://github.com/sunjon/Shade.nvim
 -- require("nohuman.plugins.config.shade")
-

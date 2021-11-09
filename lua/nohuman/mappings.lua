@@ -20,6 +20,9 @@ map('n', 'sj', '<C-w>j',opts)
 map('n', 'sk', '<C-w>k',opts)
 map('n', 'sl', '<C-w>l',opts)
 
+-- Search and Center
+map('n', 'n', 'nzzzv', opts)
+map('v', 'n', 'nzzzv', opts)
 
 -- Splits
 map('n', '<leader>v', ':vsplit<CR>', opts)
@@ -131,6 +134,7 @@ keymap('n', '<leader>fb', ':Telescope buffers<CR>', opts)
 keymap('n', '<leader>sf', ':Telescope live_grep<CR>', opts)
 keymap('n', '<leader>ff', ':Telescope fd<CR>', opts)
 keymap('n', '<leader>fc', ':Telescope colorscheme<CR>', opts)
+-- keymap('n', '<leader>fc', ':lua FindColors()<CR>', opts)
 
 -- GitSigns
 map('n', '<leader>gs', ':Gitsigns toggle_current_line_blame<CR>', opts)

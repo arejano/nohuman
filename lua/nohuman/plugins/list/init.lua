@@ -75,10 +75,13 @@ require("packer").startup(function(use)
 
   use('liuchengxu/vista.vim')
   use("wbthomason/packer.nvim")
+
   use 'EdenEast/nightfox.nvim'
+
   use({
     "NvChad/nvim-base16.lua",
   })
+
   use({
     "kyazdani42/nvim-tree.lua",
     requires = "kyazdani42/nvim-web-devicons",
@@ -128,7 +131,10 @@ require("packer").startup(function(use)
   use({ "tweekmonster/startuptime.vim", opt = true })
   use("p00f/nvim-ts-rainbow")
   use("lukas-reineke/indent-blankline.nvim")
+
+  -- Feline Status Line
   use("famiu/feline.nvim")
+
   use({ "vimwiki/vimwiki", opt = true })
   use({
     "creativenull/diagnosticls-configs-nvim",
@@ -142,6 +148,14 @@ require("packer").startup(function(use)
   -- Harpoon
   use('ThePrimeagen/harpoon')
 
+  -- Tokyo Night Theme
+  use 'folke/tokyonight.nvim'
+
+  -- Lualine
+  use {
+    'nvim-lualine/lualine.nvim',
+    requires = {'kyazdani42/nvim-web-devicons', opt = true}
+  }
   for _, plugin in ipairs(vim.g.nohuman_extra_plugins) do
     use(plugin)
   end

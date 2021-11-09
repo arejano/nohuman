@@ -1,5 +1,3 @@
-
-
 local tree_cb = require'nvim-tree.config'.nvim_tree_callback
 -- default mappings
 local list = {
@@ -40,12 +38,12 @@ local list = {
 require'nvim-tree'.setup {
   disable_netrw       = true,
   hijack_netrw        = true,
-  open_on_setup       = false,
+  open_on_setup       = true,
   ignore_ft_on_setup  = {},
   auto_close          = true,
   open_on_tab         = true,
   hijack_cursor       = true,
-  update_cwd          = false,
+  update_cwd          = true,
   update_to_buf_dir   = {
     enable = true,
     auto_open = true,
@@ -73,7 +71,7 @@ require'nvim-tree'.setup {
     custom = {}
   },
   view = {
-    width = 30,
+    width = 50,
     height = 30,
     hide_root_folder = false,
     side = 'left',
