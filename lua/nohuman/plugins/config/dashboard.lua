@@ -6,7 +6,7 @@ vim.cmd("packadd dashboard-nvim")
 g.dashboard_default_executive = "telescope"
 
 local custom_header = {
-   "      N_O_H  H U M A N  I N T E R F A C E  | IDE |      ",
+   "      NOH!HUMAN  | IDE |      ",
 }
 
 g.dashboard_custom_header = custom_header
