@@ -86,6 +86,15 @@ keymap('n', ';j',   ':resize -3 <CR>',          { noremap=true, silent=true })
 keymap('n', ';l',   ':vertical resize +3 <CR>', { noremap=true, silent=true })
 keymap('n', ';h',   ':vertical resize -3 <CR>', { noremap=true, silent=true })
 
+-- ALT RESIZES
+-- resize up and down
+keymap('n', '<A-k>',   ':resize +3 <CR>',          { noremap=true, silent=true })
+keymap('n', '<A-j>',   ':resize -3 <CR>',          { noremap=true, silent=true })
+-- resize right and left
+keymap('n', '<A-l>',   ':vertical resize +3 <CR>', { noremap=true, silent=true })
+keymap('n', '<A-h>',   ':vertical resize -3 <CR>', { noremap=true, silent=true })
+
+
 -- move selected line(s) up or down
 keymap('v', 'K', ":m '<-2<CR>gv=gv", {noremap=true, silent=true})
 keymap('v', 'J', ":m '>+1<CR>gv=gv", {noremap=true, silent=true})
@@ -148,3 +157,15 @@ map('v', '<leader>/', ':Commentary<CR>', opts)
 map('n', '<leader>h', ':TroubleToggle<CR>', opts)
 map('v', '<leader>h', ':TroubleToggle<CR>', opts)
 
+--Format
+map('n', '<leader>p', ':Neoformat prettier<CR>', opts)
+
+--Zen Mode
+map('n', '<leader>zz', ':TZAtaraxis<CR>', opts)
+map('n', '<leader>zf', ':TZMinimalist<CR>', opts)
+map('n', '<leader>zm', ':TZFocus<CR>', opts)
+
+-- Controlando as Abas
+map('n', '<leader>tn', ':tabnew<CR>', opts)
+map('n', '<leader>,', ':tabprevious<CR>', opts)
+map('n', '<leader>.', ':tabnext<CR>', opts)

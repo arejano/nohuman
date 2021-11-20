@@ -49,7 +49,18 @@ packer.init({
 
 local vim = vim
 require("packer").startup(function(use)
-   
+    -- use {
+    --  "folke/zen-mode.nvim",
+    --  config = function()
+    --    require("zen-mode").setup {
+    --      -- your configuration comes here
+    --      -- or leave it empty to use the default settings
+    --      -- refer to the configuration section below
+    --    }
+    --  end
+    -- }
+    use "Pocco81/TrueZen.nvim"
+
    use {
       "tpope/vim-scriptease",
       cmd = {
@@ -68,6 +79,16 @@ require("packer").startup(function(use)
   )
 
   use ('sunjon/shade.nvim')
+
+
+  --Neoclip
+  use {
+    "AckslD/nvim-neoclip.lua",
+    requires = {'tami5/sqlite.lua', module = 'sqlite'},
+    config = function()
+      require('neoclip').setup()
+    end,
+  }
 
   -- Neorformat with prettier
   -- https://prettier.io/docs/en/vim.html

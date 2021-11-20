@@ -2,6 +2,7 @@ local vim = vim
 local opt = vim.opt
 
 opt.ruler = false
+opt.clipboard = "unnamedplus"
 opt.hidden = true
 opt.ignorecase = true
 opt.splitbelow = true
@@ -22,7 +23,7 @@ opt.pumheight = 20
 opt.relativenumber = true
 opt.foldmethod = "manual"
 vim.cmd("set wildcharm=<Tab>")
-vim.wo.wrap = false
+vim.wo.wrap = true
 
 -- vim.g.cursorword_highlight = true
 -- vim.g.cursorline_timeout = 500

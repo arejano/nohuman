@@ -20,6 +20,10 @@ function GlobalFunction()
   end)
 end
 
+function TesteShell()
+  os.execute("echo 'Gustavo Arejano'")
+end
+
 P = function(v)
   return v
 end

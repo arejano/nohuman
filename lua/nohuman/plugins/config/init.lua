@@ -27,5 +27,7 @@ require("nohuman.plugins.config.nightfox")
 require("nohuman.plugins.config.harpoon")
 --LSP
 require("nohuman.plugins.config.lsp")
+--Neoclip 
+require("nohuman.plugins.config.neoclip")
 --Shade https://github.com/sunjon/Shade.nvim
 -- require("nohuman.plugins.config.shade")
